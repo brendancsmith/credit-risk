@@ -4,7 +4,9 @@ from sklearn.preprocessing import LabelEncoder
 def encode_categorical(df):
     # Identify categorical variables
     categorical_cols = df.select_dtypes(include=["object"]).columns.tolist()
-    categorical_cols.remove("Target")  # Exclude target variable
+
+    if "Target" in categorical_cols:
+        categorical_cols.remove("Target")  # Exclude target variable
 
     # Encode target variable
     df["Target"] = df["Target"].map({1: 0, 2: 1})  # 1: Good Credit (0), 2: Bad Credit (1)
@@ -24,3 +26,5 @@ def scale_features(df):
     # Standardization
     scaler = StandardScaler()
     df[numerical_cols] = scaler.fit_transform(df[numerical_cols])
+
+    return df
