@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "credit-risk-modeling"
+version = "0.1.0"
+description = "Credit Risk Modeling using XGBoost"
+authors = ["Brendan Smith <mail@brendansmith.ai>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+[tool.poetry.group.dev.dependencies]
+jupyterlab = "^4.2.5"
+pre-commit = "^3.8.0"
+trunk = "^0.3.0"
+pytest = "^8.3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
