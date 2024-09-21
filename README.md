@@ -2,28 +2,43 @@
 
 ## Overview
 
-This project uses the **German Credit Data** dataset from the UCI Machine Learning Repository. The dataset contains information on credit applicants and whether they defaulted.
+This project uses the **Lending Club Loan Dataset** from Kaggle, which contains detailed information about loans issued through the Lending Club platform, including borrower details, loan attributes, and payment status.
 
 ## Installation
 
-1. Install PostgreSQL
+1. Clone the repository
 
-Using Homebrew on macOS:
 ```bash
-brew install postgresql
+git clone https://github.com/brendancsmith/credit-risk-modeling.git
 ```
 
 2. Install Python dependencies
+
 ```bash
 poetry init
-poetry install --no-root
+poetry install
+```
+
+3. Download the [dataset](https://www.kaggle.com/datasets/wordsforthewise/lending-club) from Kaggle
+
+```bash
+brew install kaggle
+
+cd data
+kaggle datasets download -d wordsforthewise/lending-club --unzip
+mv *_2007_to_2018q4.csv/*_2007_to_2018Q4.csv raw/
+rm -r *_2007_to_2018*
+cd -
 ```
 
 ## Usage
 
+See the `notebooks` folder for a detailed analysis of the dataset and the modeling process.
+
 ## Development
 
 ```bash
+pre-commit install
 pre-commit install-hooks
 ```
 
