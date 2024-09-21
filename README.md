@@ -2,6 +2,8 @@
 
 ## Overview
 
+This project uses the **German Credit Data** dataset from the UCI Machine Learning Repository. The dataset contains information on credit applicants and whether they defaulted.
+
 ## Installation
 
 1. Install PostgreSQL
@@ -18,6 +20,16 @@ poetry install --no-root
 ```
 
 ## Usage
+
+## Development
+
+```bash
+pre-commit install-hooks
+```
+
+```bash
+nbstripout --install
+```
 
 ## License
 

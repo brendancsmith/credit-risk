@@ -20,6 +20,10 @@ jupyterlab = "^4.2.5"
 pre-commit = "^3.8.0"
 trunk = "^0.3.0"
 pytest = "^8.3.3"
+nbstripout = "^0.7.1"
+ruff = "^0.6.6"
+pylint = "^3.3.0"
+notebook = "^7.2.2"
 
 [build-system]
 requires = ["poetry-core"]
