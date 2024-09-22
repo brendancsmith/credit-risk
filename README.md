@@ -26,7 +26,7 @@ brew install kaggle
 
 cd data
 kaggle datasets download -d wordsforthewise/lending-club --unzip
-mv *_2007_to_2018q4.csv/*_2007_to_2018Q4.csv raw/
+mv accepted_2007_to_2018q4.csv/accepted_2007_to_2018Q4.csv raw/
 rm -r *_2007_to_2018*
 cd -
 ```
