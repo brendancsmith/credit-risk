@@ -2,6 +2,14 @@ import numpy as np
 import pandas as pd
 from sklearn.discriminant_analysis import StandardScaler
 
+ONEHOT = [
+    'application_type',
+    'home_ownership',
+    'purpose',
+    'term',
+    'verification_status'
+]
+
 def encode_target(df):
     # Filter df for Fully Paid and Charged Off loans
     df = df[df['loan_status'].isin(['Fully Paid', 'Charged Off'])]
@@ -11,18 +19,14 @@ def encode_target(df):
 
     return df
 
-def encode_categorical(df):
+def onehot_encoding(df):
+    #TODO: remove grade and use sub_grade only
+
     # Label Encoding for ordinal categorical variables
     df['grade'] = df['grade'].map({'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7})
 
     # One-Hot Encoding for nominal categorical variables
-    df = pd.get_dummies(df, columns=[
-        'application_type',
-        'home_ownership',
-        'purpose',
-        'term',
-        'verification_status'
-    ])
+    df = pd.get_dummies(df, columns=ONEHOT)
 
     # Create a mapping for subgrade
     subgrade_list = sorted(df['sub_grade'].unique())
@@ -43,29 +47,6 @@ def frequency_encoding(df):
     
     return df
 
-def convert_dates(df):
-    # List of date columns
-    date_cols = ['earliest_cr_line']
-
-    # Convert date columns to datetime
-    for col in date_cols:
-        dates = pd.to_datetime(df[col], format='%b-%Y')
-        unix_times = dates.astype(int) / 10**9
-        df[col] = unix_times
-
-    return df
-
-def scale_features(df):
-    # Identify numerical variables
-    numerical_cols = df.select_dtypes(include=["int64", "float64"]).columns.tolist()
-    numerical_cols.remove("loan_status")  # Exclude target variable
-
-    # Standardization
-    scaler = StandardScaler()
-    df[numerical_cols] = scaler.fit_transform(df[numerical_cols])
-
-    return df
-
 def drop_high_corr(df, corr_matrix):
     # Find features with correlation > 0.8
     high_corr_var = np.where(corr_matrix > 0.8)
@@ -84,10 +65,10 @@ def drop_high_corr(df, corr_matrix):
 
 def new_features(df):
     # Length of Employment
-    df['emp_length'] = df['emp_length'].str.extract('(\d+)').astype(float)
-    df['emp_length'].fillna(0, inplace=True)
+    df['emp_length'] = df['emp_length'].str.extract(r'(\d+)').astype(float)
+    df['emp_length'] = df['emp_length'].fillna(0)
 
     # First digits of zip code
-    df['zip_code'] = df['zip_code'].str.extract('(\d+)').astype(float)
+    df['zip_code'] = df['zip_code'].str.extract(r'(\d+)').astype(int)
 
     return df
