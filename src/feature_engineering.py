@@ -1,53 +1,47 @@
+from typing import Any, Dict, List
 import numpy as np
 import pandas as pd
 from sklearn.discriminant_analysis import StandardScaler
 
-ONEHOT = [
-    'application_type',
-    'home_ownership',
-    'purpose',
-    'term',
-    'verification_status'
-]
 
-def encode_target(df):
-    # Filter df for Fully Paid and Charged Off loans
-    df = df[df['loan_status'].isin(['Fully Paid', 'Charged Off'])]
 
-    # Encode target variable
-    df['loan_status'] = df['loan_status'].map({'Fully Paid': 0, 'Charged Off': 1})
+def index_categories(df: pd.DataFrame, target, categories: List[str] | None = None, drop=False) -> pd.DataFrame:
+    # Create a mapping for target variable if not provided
+    if categories is None:
+        categories = list(np.unique(df[target]))
+    elif drop:
+        # Filter out records without appropriate targets
+        df = df[df[target].isin(categories)]
 
+    # Map target variable to index
+    mapping = {label: idx for idx, label in enumerate(categories)}
+    df[target] = df[target].map(mapping)
     return df
 
-def onehot_encoding(df):
-    #TODO: remove grade and use sub_grade only
 
-    # Label Encoding for ordinal categorical variables
-    df['grade'] = df['grade'].map({'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7})
+def onehot_encoding(df: pd.DataFrame, cols: List[str] | None = None) -> pd.DataFrame:
+    if not cols:
+        return df
 
     # One-Hot Encoding for nominal categorical variables
-    df = pd.get_dummies(df, columns=ONEHOT)
-
-    # Create a mapping for subgrade
-    subgrade_list = sorted(df['sub_grade'].unique())
-    subgrade_mapping = {subgrade: idx for idx, subgrade in enumerate(subgrade_list)}
-    df['sub_grade'] = df['sub_grade'].map(subgrade_mapping)
+    df = pd.get_dummies(df, columns=cols)
 
     return df
 
-def frequency_encoding(df):
-    # Calculate default rate per state
-    state_default_rate = df.groupby('addr_state')['loan_status'].mean()
+def frequency_encoding(df: pd.DataFrame, cols: List[str] | None = None) -> pd.DataFrame:
+    if not cols:
+        return df
 
-    # Map default rate to each record
-    df['state_default_rate'] = df['addr_state'].map(state_default_rate)
+    for col in cols:
+        # Calculate frequency of each category
+        freq = df[col].value_counts() / len(df)
 
-    # Drop addr_state
-    df = df.drop(columns=['addr_state'])
+        # Map frequency to each record
+        df[col] = df[col].map(freq)
     
     return df
 
-def drop_high_corr(df, corr_matrix):
+def drop_corr_pairs(df, corr_matrix):
     # Find features with correlation > 0.8
     high_corr_var = np.where(corr_matrix > 0.8)
     high_corr_var = [
@@ -63,7 +57,17 @@ def drop_high_corr(df, corr_matrix):
 
     return df
 
-def new_features(df):
+def extract_integers(df: pd.DataFrame, cols: List[str] | None = None) -> pd.DataFrame:
+    if not cols:
+        return df
+
+    for col in cols:
+        # Extract numerical values from strings
+        df[col] = df[col].str.extract(r'(\d+)').astype(int).fillna(0)
+
+    return df
+
+def new_features(df: pd.DataFrame) -> pd.DataFrame:
     # Length of Employment
     df['emp_length'] = df['emp_length'].str.extract(r'(\d+)').astype(float)
     df['emp_length'] = df['emp_length'].fillna(0)

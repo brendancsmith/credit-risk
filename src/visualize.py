@@ -6,7 +6,7 @@ from sklearn import metrics
 
 def correlation_matrix(corr):
     # Plot heatmap
-    mask = np.zeros_like(corr, dtype=np.bool)
+    mask = np.zeros_like(corr, dtype=bool)
     mask[np.triu_indices_from(mask)] = True
     _, _ = plt.subplots(figsize=(11, 9))
     cmap = sns.diverging_palette(220, 10, as_cmap=True)
