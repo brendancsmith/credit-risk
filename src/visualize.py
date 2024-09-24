@@ -16,8 +16,9 @@ def correlation_matrix(corr):
 
 def correlations(corr):
     # Plot correlation values
-    _, ax = plt.subplots(figsize=(11, 9))
-    sns.heatmap(corr, annot=True, fmt='.2f', ax=ax)
+    plt.figure(figsize=(11, 9))
+    sns.heatmap(corr, annot=True, cmap='coolwarm', center=0, fmt='.2f')
+    plt.title('Feature Correlations with Loan Status')
     plt.show()
 
 def class_dist(df):
@@ -43,4 +44,14 @@ def confusion_matrix(y_test, y_pred):
     plt.xlabel('Predicted')
     plt.ylabel('Actual')
     plt.title('Confusion Matrix')
+    plt.show()
+
+def plot_rfe(rfe, n_features_to_select=None):
+    plt.figure()
+    plt.title("RFE with cross-validation")
+    plt.xlabel("Number of features selected")
+    plt.ylabel("Cross validation score")
+    plt.plot(rfe.cv_results_["n_features"], rfe.cv_results_["mean_test_score"])
+    cv_score = rfe.cv_results_["mean_test_score"][rfe.n_features_ - 1]
+    plt.scatter(rfe.n_features_, cv_score, marker="|", s=100)
     plt.show()
