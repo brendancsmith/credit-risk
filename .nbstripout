@@ -1,0 +1,2 @@
+[nbstripout]
+exclude = notebooks/eda.ipynb, notebooks/train.ipynb
