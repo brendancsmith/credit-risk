@@ -57,22 +57,8 @@ def drop_corr_pairs(df, corr_matrix):
 
     return df
 
-def extract_integers(df: pd.DataFrame, cols: List[str] | None = None) -> pd.DataFrame:
-    if not cols:
-        return df
-
-    for col in cols:
-        # Extract numerical values from strings
-        df[col] = df[col].str.extract(r'(\d+)').astype(int).fillna(0)
-
-    return df
-
 def new_features(df: pd.DataFrame) -> pd.DataFrame:
-    # Length of Employment
-    df['emp_length'] = df['emp_length'].str.extract(r'(\d+)').astype(float)
-    df['emp_length'] = df['emp_length'].fillna(0)
-
     # First digits of zip code
-    df['zip_code'] = df['zip_code'].str.extract(r'(\d+)').astype(int)
+    df['zip_code'] = df['zip_code'].str.extract(r'(\d+)').astype(float)
 
     return df

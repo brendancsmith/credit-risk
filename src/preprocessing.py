@@ -51,6 +51,16 @@ def convert_dates(df: pd.DataFrame, cols: List[str] | None = None) -> pd.DataFra
 
     return df
 
+def extract_digits(df: pd.DataFrame, cols: List[str] | None = None) -> pd.DataFrame:
+    if not cols:
+        return df
+
+    for col in cols:
+        # Extract numerical values from strings
+        df[col] = df[col].str.extract(r'(\d+)').astype(float)
+
+    return df
+
 def scale_features(df: pd.DataFrame) -> pd.DataFrame:
     # Identify numerical variables
     numerical_cols = df.select_dtypes(include=["int64", "float64"]).columns.tolist()
