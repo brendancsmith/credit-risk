@@ -61,10 +61,12 @@ def extract_digits(df: pd.DataFrame, cols: List[str] | None = None) -> pd.DataFr
 
     return df
 
-def scale_features(df: pd.DataFrame) -> pd.DataFrame:
+def scale_features(df: pd.DataFrame, target=None) -> pd.DataFrame:
     # Identify numerical variables
     numerical_cols = df.select_dtypes(include=["int64", "float64"]).columns.tolist()
-    numerical_cols.remove("loan_status")  # Exclude target variable
+
+    if target and target in numerical_cols:
+        numerical_cols.remove("loan_status")  # Exclude target variable
 
     # Standardization
     scaler = StandardScaler()

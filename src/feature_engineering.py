@@ -5,17 +5,17 @@ from sklearn.discriminant_analysis import StandardScaler
 
 
 
-def index_categories(df: pd.DataFrame, target, categories: List[str] | None = None, drop=False) -> pd.DataFrame:
-    # Create a mapping for target variable if not provided
+def index_categories(df: pd.DataFrame, col, categories: List[str] | None = None, drop=False) -> pd.DataFrame:
+    # Create a mapping for col if not provided
     if categories is None:
-        categories = list(np.unique(df[target]))
+        categories = list(np.unique(df[col]))
     elif drop:
         # Filter out records without appropriate targets
-        df = df[df[target].isin(categories)]
+        df = df[df[col].isin(categories)]
 
-    # Map target variable to index
+    # Map values to index
     mapping = {label: idx for idx, label in enumerate(categories)}
-    df[target] = df[target].map(mapping)
+    df[col] = df[col].map(mapping)
     return df
 
 

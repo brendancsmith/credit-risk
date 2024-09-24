@@ -17,7 +17,7 @@ def correlation_matrix(corr):
 def correlations(corr):
     # Plot correlation values
     plt.figure(figsize=(11, 9))
-    sns.heatmap(corr, annot=True, cmap='coolwarm', center=0, fmt='.2f')
+    sns.heatmap(corr, annot=False, cmap='coolwarm', center=0)
     plt.title('Feature Correlations with Loan Status')
     plt.show()
 
